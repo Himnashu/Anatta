@@ -21,6 +21,9 @@ export default {
 </script>
 
 <style lang="scss" >
+.error{
+   color: red; 
+}
 .popup-blur{
   filter: blur(2px);
 }

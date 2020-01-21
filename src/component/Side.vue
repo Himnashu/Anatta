@@ -1,7 +1,7 @@
 <template>
   <div id="side">
     <div class="heading">Anatta Design</div>
-    <div class="tabs">
+    <div class="tabs"  v-if="!userDashboard">
       <div
         class="tab"
         v-for="(data , index) in tabData"
@@ -10,6 +10,11 @@
         @click="toggleTab(index)"
       >{{data.name}}</div>
     </div>
+    <div class="tabs"  v-if="userDashboard">
+      <div
+        class="tab active"
+      >Dashboard</div>
+    </div>
   </div>
 </template>
 <script>
@@ -17,8 +22,14 @@ export default {
   name: "side",
   data() {
     return {
-      tabData: this.$store.state.dashBoardTab
-    };
+      tabData: this.$store.state.dashBoardTab ,
+      userDashboard : false
+    }
+  },
+  mounted : function(){
+      if(localStorage.getItem('role')==='user'){
+              this.userDashboard=true
+      }
   },
   methods: {
     toggleTab(tabIndex) {

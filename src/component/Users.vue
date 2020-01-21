@@ -34,7 +34,7 @@
               Are you confirm to delete this user ? 
               </div>
               <button @click="showDeletePopup=!showDeletePopup" class="button">Cancel</button>
-              <button class="button red-btn">Confirm</button>
+              <button @click="DeleteUser()" class="button red-btn">Confirm</button>
             </div>
           </template>
           <template v-slot:footer>
@@ -53,58 +53,14 @@
         <th></th>
       </thead>
       <tbody>
-        <tr>
-          <td>Himanshu satija</td>
-          <td>Himanshu@anattadesign.com</td>
-          <td>7742986934</td>
+        <tr v-for="user in userData" :key="user.email">
+          <td>{{user.name}}</td>
+          <td>{{user.email}}</td>
+          <td>{{user.number}}</td>
           <td class="buttons">
             <div>
               <button @click="showEditPopup=!showEditPopup">Edit Details</button>
-              <button @click="showDeletePopup=!showDeletePopup">Delete</button>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td>Himanshu satija</td>
-          <td>Himanshu@anattadesign.com</td>
-          <td>7742986934</td>
-          <td class="buttons">
-            <div>
-              <button>Edit Details</button>
-              <button>Delete</button>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td>Himanshu satija</td>
-          <td>Himanshu@anattadesign.com</td>
-          <td>7742986934</td>
-          <td class="buttons">
-            <div>
-              <button>Edit Details</button>
-              <button>Delete</button>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td>Himanshu satija</td>
-          <td>Himanshu@anattadesign.com</td>
-          <td>7742986934</td>
-          <td class="buttons">
-            <div>
-              <button>Edit Details</button>
-              <button>Delete</button>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td>Himanshu satija</td>
-          <td>Himanshu@anattadesign.com</td>
-          <td>7742986934</td>
-          <td class="buttons">
-            <div>
-              <button>Edit Details</button>
-              <button>Delete</button>
+              <button @click="DeletePopup(user.email)" >Delete</button>
             </div>
           </td>
         </tr>
@@ -121,17 +77,32 @@ export default {
       return {
           showPopup : false,
           showEditPopup : false,
-          showDeletePopup : false
+          showDeletePopup : false, 
+          DeleteUserEmail : '' ,
+          userData : this.$store.state.users.filter((user)=>{
+           if(user.roll!=="admin"){
+             return user
+           }
+          })
       }
   },
   watch : {
     showPopup : () => {
-      console.log('clicked')
      var element = document.getElementById("app");
-  element.classList.add("popup-blur");
+  // element.classList.add("popup-blur");
       }
-  
-  } , 
+  } ,
+  methods : {
+     DeletePopup(email) {
+      this.showDeletePopup=!this.showDeletePopup;
+      this.DeleteUserEmail=email;      
+    },
+    DeleteUser(){
+      this.$store.commit("DeleteUser",  this.DeleteUserEmail);
+      this.showDeletePopup=!this.showDeletePopup;
+      console.log(this.$store.state.users)
+    }
+  },
   components : {
       Popup , 
       Signup

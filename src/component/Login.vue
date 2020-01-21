@@ -30,64 +30,16 @@
           <button type="submit" @click="LoginToDashboard()">Submit</button>
         </div>
       </form>
-      <form v-if="!tabData[0].active">
-        <div class="inputs">
-          <div class="input">
-            <label>{{'Name'}}</label>
-            <input type="text" placeholder="Enter Name" />
-          </div>
-          <div class="input">
-            <label>{{'Email'}}</label>
-            <input type="email" placeholder="Enter Email" />
-          </div>
-          <div class="input">
-            <label>{{'Company'}}</label>
-            <input type="text" placeholder="Enter Company Name" />
-          </div>
-          <div class="input">
-            <label>{{'Password'}}</label>
-            <input type="password" placeholder="Enter Password" />
-          </div>
-          <div class="input">
-            <label>{{'Confirm Password'}}</label>
-            <input type="text" placeholder="Enter Password Again" />
-          </div>
-          <div class="input">
-            <label>{{'Job Title'}}</label>
-            <input type="text" placeholder="Enter Job Title" />
-          </div>
-          <div class="input">
-            <label>{{'Address : Country'}}</label>
-            <select>
-              <option>India</option>
-              <option>Country</option>
-              <option>Country</option>
-              <option>Country</option>
-              <option>Country</option>
-            </select>
-          </div>
-          <div class="input">
-            <label>{{'State'}}</label>
-            <select>
-              <option>State</option>
-            </select>
-          </div>
-          <div class="input">
-            <label>{{'City'}}</label>
-            <select>
-              <option>City</option>
-            </select>
-          </div>
-        </div>
-        <div>
-          <button type="submit">Submit</button>
-        </div>
-      </form>
+      <div v-if="!tabData[0].active">
+        <Signup />
+      </div>
     </div>
   </div>
 </template>
 <script>
 import "../backend/Users.json";
+import CountryDropdown from "./CountryDropdown";
+import Signup from "./SignUp";
 export default {
   name: "login",
   data() {
@@ -100,9 +52,15 @@ export default {
       errorMsg: ""
     };
   },
-  mounted() {},
-  computed: {},
-  watch: {},
+  components: {
+    CountryDropdown,
+    Signup
+  },
+  mounted : function (){
+      if(localStorage.getItem('role')!==null){
+          this.$router.push('/dashboard')
+      }
+  },
   methods: {
     toggleTab(tabIndex) {
       this.tabData[tabIndex].active = true;
@@ -132,28 +90,29 @@ export default {
             this.errorMsg = "Please Enter Valid Email";
             return null;
           } else {
-              var userData = {};
+            var userData = {};
             this.users.map(user => {
               if (user.email === this.loginEmail) {
-                  userData=user
+                userData = user;
               }
             });
-            console.log(userData)
-             if (userData.password === this.loginPassword) {
-                 if(userData.roll==="admin"){
-                     this.errorMsg = "successfully  admin login";
-                     localStorage.setItem("role" , "admin" );
-                     localStorage.setItem("data" , JSON.stringify(userData));
-                     this.$router.push('/dashboard');
-                 }else{
-                                          this.errorMsg = "successfully  user login";
-
-                 }
-
-                } else {
-                  this.error = true;
-                  this.errorMsg = "Please Enter Correct Password";
-                }
+            console.log(userData);
+            if (userData.password === this.loginPassword) {
+              if (userData.roll === "admin") {
+                this.errorMsg = "";
+                localStorage.setItem("role", "admin");
+                localStorage.setItem("data", JSON.stringify(userData));
+                this.$router.push("/dashboard");
+              } else {
+                this.errorMsg = "";
+                localStorage.setItem("role", "user");
+                localStorage.setItem("data", JSON.stringify(userData));
+                this.$router.push("/dashboard");
+              }
+            } else {
+              this.error = true;
+              this.errorMsg = "Please Enter Correct Password";
+            }
           }
         }
       }

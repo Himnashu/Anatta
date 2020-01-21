@@ -1,63 +1,83 @@
 <template>
     <div id='userDetails'>
+        <popup v-if="showEditPopup">
+          <template v-slot:header>Edit User
+            <div class="close" @click="showEditPopup=!showEditPopup">&#10005;</div>
+          </template>
+          <template>
+              <Signup />
+          </template>
+          <template v-slot:footer>
+              <button></button>
+          </template>
+      </popup>
+        <div class="edit-details">
+              <button @click="showEditPopup=!showEditPopup">Edit Details</button>
+        </div>
        <form>
             <div class="inputs">
               <div class="input">
                 <label>{{'Name'}}</label>
-                <input type="text" placeholder="Enter Name" />
+                <input type="text" placeholder="Enter Name" disabled :value="data.name" />
               </div>
               <div class="input">
                 <label>{{'Email'}}</label>
-                <input type="email" placeholder="Enter Email" />
+                <input type="email" placeholder="Enter Email" disabled :value="data.email" />
               </div>
               <div class="input">
                 <label>{{'Company'}}</label>
-                <input type="text" placeholder="Enter Company Name" />
+                <input type="text" placeholder="Enter Company Name"  disabled :value="data.company"/>
               </div>
               <div class="input">
                 <label>{{'Password'}}</label>
-                <input type="password" placeholder="Enter Password" />
+                <input type="password" placeholder="Enter Password"  disabled value="********"/>
               </div>
               <div class="input">
-                <label>{{'Confirm Password'}}</label>
-                <input type="text" placeholder="Enter Password Again" />
+                <label>{{'Number'}}</label>
+                <input type="text" placeholder="Enter Number" disabled :value="data.number" />
               </div>
               <div class="input">
-                <label>{{'Job Title'}}</label>
-                <input type="text" placeholder="Enter Job Title" />
+                <label>Job Title</label>
+                <input type="text" placeholder="Enter Job Title" disabled :value="data.job_title" />
               </div>
               <div class="input">
-                <label>{{'Address : Country'}}</label>
-                <select >
-                  <option>India</option>
-                  <option>Country</option>
-                  <option>Country</option>
-                  <option>Country</option>
-                  <option>Country</option>
-                </select>
+                <label>Address : Country</label>
+                <input type="text" placeholder="Enter Job Title" disabled :value="data.address.country" />
               </div>
               <div class="input">
                 <label>{{'State'}}</label>
-                <select >
-                  <option>State</option>
-                </select>
+              <input type="text" placeholder="Enter Job Title" disabled :value="data.address.state" />
               </div>
               <div class="input">
                 <label>{{'City'}}</label>
-                <select >
-                  <option>City</option>
-                </select>
+               <input type="text" placeholder="Enter Job Title" disabled :value="data.address.city" />
               </div>
-            </div>
-            <div>
-              <button type="submit">Submit</button>
             </div>
           </form>
     </div>
 </template>
 <script>
+import popup from './Popup';
+import Signup from './SignUp';
+
 export default {
     name : 'userDetails' , 
+    data (){
+        return {
+            showEditPopup : false,
+            data : {}
+        }
+    },
+    components : {
+        popup,
+        Signup
+    },
+    mounted : function(){
+        if(localStorage.getItem('data')){
+            this.data= JSON.parse(localStorage.getItem('data'))
+            console.log(this.data);
+        }
+    }
   
 }
 </script>
@@ -66,6 +86,9 @@ export default {
         width: 100%;
     padding: 60px;
     box-sizing: border-box;
+}
+.edit-details{
+    margin-bottom: 20px;
 }
 .inputs {
         label {
