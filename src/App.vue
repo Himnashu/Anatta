@@ -2,23 +2,28 @@
   <div id="app">
     <div class="dashboard-ctr">
       <router-view></router-view>
-      
-      <div class="dashboard-ctr"></div>
     </div>
   </div>
 </template>
 
 <script>
+import Popup from './component/Popup';
 export default {
   EL: "#app",
   data() {
     return {
-    };
+    }
   },
+  components : {
+    Popup
+  }
 };
 </script>
 
 <style lang="scss" >
+.popup-blur{
+  filter: blur(2px);
+}
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -28,7 +33,6 @@ export default {
   margin-top: 60px;
   max-width: 1440px;
   margin: auto;
-  margin-bottom: 60px;
   width: 100%;
   box-sizing: border-box;
   .dashboard-ctr {

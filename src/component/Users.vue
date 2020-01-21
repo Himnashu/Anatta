@@ -1,9 +1,50 @@
 <template>
   <div id="users">
-  <div class="heading">
+    <div class="heading">
       <div>Users List</div>
-      <div><button>+ Add User</button></div>
-  </div>
+      <popup v-if="showPopup">
+          <template v-slot:header>Add User
+            <div class="close" @click="showPopup=!showPopup">&#10005;</div>
+          </template>
+          <template>
+              <Signup />
+          </template>
+          <template v-slot:footer>
+              <button></button>
+          </template>
+      </popup>
+      <popup v-if="showEditPopup">
+          <template v-slot:header>Edit User
+            <div class="close" @click="showEditPopup=!showEditPopup">&#10005;</div>
+          </template>
+          <template>
+              <Signup />
+          </template>
+          <template v-slot:footer>
+              <button></button>
+          </template>
+      </popup>
+      <popup v-if="showDeletePopup">
+          <template v-slot:header>Delete User
+            <div class="close" @click="showDeletePopup=!showDeletePopup">&#10005;</div>
+          </template>
+          <template>
+            <div class="delete-popup">
+              <div class="heading">
+              Are you confirm to delete this user ? 
+              </div>
+              <button @click="showDeletePopup=!showDeletePopup" class="button">Cancel</button>
+              <button class="button red-btn">Confirm</button>
+            </div>
+          </template>
+          <template v-slot:footer>
+              <button></button>
+          </template>
+      </popup>
+      <div>
+        <button class="add-user-btn"   @click="showPopup=!showPopup">+ Add User</button>
+      </div>
+    </div>
     <table>
       <thead>
         <th>Name</th>
@@ -18,8 +59,8 @@
           <td>7742986934</td>
           <td class="buttons">
             <div>
-              <button>Edit Details</button>
-              <button>Delete</button>
+              <button @click="showEditPopup=!showEditPopup">Edit Details</button>
+              <button @click="showDeletePopup=!showDeletePopup">Delete</button>
             </div>
           </td>
         </tr>
@@ -72,34 +113,79 @@
   </div>
 </template>
 <script>
+import Popup from './Popup';
+import Signup from './SignUp';
 export default {
-  name: "users"
+  name: "users", 
+  data (){
+      return {
+          showPopup : false,
+          showEditPopup : false,
+          showDeletePopup : false
+      }
+  },
+  watch : {
+    showPopup : () => {
+      console.log('clicked')
+     var element = document.getElementById("app");
+  element.classList.add("popup-blur");
+      }
+  
+  } , 
+  components : {
+      Popup , 
+      Signup
+  }
 };
 </script>
 <style scoped lang="scss">
-#users {
-  padding: 60px;
+.close{
+  cursor: pointer;
+}
+.delete-popup{
   .heading{
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 24px;
-      font-weight: bold;
-      margin-bottom: 20px;
-      button{
-              font-size: 16px;
-    padding: 8px;
-    background: white;
-    font-weight: bold;
-    letter-spacing: 2px;
-    border-radius: 4px;
-    box-shadow: 2px 1px 8px grey;
-      }
+    font-size: 20px !important;
+  }
+  .red-btn{
+padding: 8px;
+          color: white;
+          font-size: 20px;
+          font-weight: bold;
+          background: #e41919;
+          
+  }
+    .button{
+padding: 8px;
+          font-size: 20px;
+          font-weight: bold;
+          border-radius: 4px;
+          
   }
 }
+#users {
+  padding: 60px;
+  .heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    .add-user-btn {
+      font-size: 16px;
+      padding: 8px;
+      background: white;
+      font-weight: bold;
+      letter-spacing: 2px;
+      border-radius: 4px;
+      box-shadow: 2px 1px 8px grey;
+    }
+  }
+}
+
 table {
   width: 1000px;
-   border-collapse:collapse;
+  border-collapse: collapse;
 
   box-shadow: 0px 1px 6px #969191;
 
@@ -110,20 +196,19 @@ table {
     }
   }
   tbody {
-     tr {
+    tr {
       height: 60px;
       &:hover {
-          transition: .5s ease-in-out all;
+        transition: 0.5s ease-in-out all;
         box-shadow: 2px 3px 15px #dedede;
-        .buttons{
-                      transition: .5s ease-in all;
+        .buttons {
+          transition: 0.5s ease-in all;
 
-            opacity: 1;
-
+          opacity: 1;
         }
       }
       .buttons {
-          opacity: 0;
+        opacity: 0;
         button {
           width: 96px;
           height: 32px;
@@ -140,5 +225,6 @@ table {
     }
     width: 100%;
   }
+  
 }
 </style>
