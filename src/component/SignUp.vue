@@ -1,37 +1,78 @@
 <template>
   <form @click.prevent>
-   <div class="error"> {{errorMsg}}</div>
-    <div class="inputs">
-      <div class="input">
-        <label>{{'Name *'}}</label>
-        <input type="text" placeholder="Enter Name" v-model="name" />
+    <div class="error">{{errorMsg}}</div>
+    <div v-if="!edit">
+      <div class="inputs">
+        <div class="input">
+          <label>{{'Name *'}}</label>
+          <input type="text" placeholder="Enter Name" v-model="name" />
+        </div>
+        <div class="input">
+          <label>{{'Email *'}}</label>
+          <input type="email" placeholder="Enter Email" v-model="email" />
+        </div>
+        <div class="input">
+          <label>{{'Company *'}}</label>
+          <input type="text" placeholder="Enter Company Name" v-model="company" />
+        </div>
+        <div class="input">
+          <label>{{'Password *'}}</label>
+          <input type="password" placeholder="Enter Password" v-model="password" />
+        </div>
+        <div class="input">
+          <label>{{'Number *'}}</label>
+          <input type="text" placeholder="Enter number" v-model="number" />
+        </div>
+        <div class="input">
+          <label>{{'Job Title *'}}</label>
+          <input type="text" placeholder="Enter Job Title" v-model="jobtitle" />
+        </div>
+        <div class="input">
+          <CountryDropdown v-on:get-data="getData($event)"></CountryDropdown>
+        </div>
       </div>
-      <div class="input">
-        <label>{{'Email *'}}</label>
-        <input type="email" placeholder="Enter Email" v-model="email" />
-      </div>
-      <div class="input">
-        <label>{{'Company *'}}</label>
-        <input type="text" placeholder="Enter Company Name" v-model="company" />
-      </div>
-      <div class="input">
-        <label>{{'Password *'}}</label>
-        <input type="password" placeholder="Enter Password" v-model="password" />
-      </div>
-      <div class="input">
-        <label>{{'Number *'}}</label>
-        <input type="text" placeholder="Enter number" v-model="number" />
-      </div>
-      <div class="input">
-        <label>{{'Job Title *'}}</label>
-        <input type="text" placeholder="Enter Job Title" v-model="jobtitle" />
-      </div>
-      <div class="input">
-        <CountryDropdown v-on:get-data="getData($event)"></CountryDropdown>
+      <div>
+        <button type="submit" @click="SignUp()">Submit</button>
       </div>
     </div>
-    <div>
-      <button type="submit" @click="SignUp()">Submit</button>
+    <!-- edit  -->
+    <div v-if="edit">
+      <div class="inputs">
+        <div class="input">
+          <label>{{'Name *'}}</label>
+          <input type="text" placeholder="Enter Name" v-model="name" />
+        </div>
+        <div class="input">
+          <label>{{'Email *'}}</label>
+          <input type="email" placeholder="Enter Email" v-model="email" />
+        </div>
+        <div class="input">
+          <label>{{'Company *'}}</label>
+          <input type="text" placeholder="Enter Company Name" v-model="company" />
+        </div>
+        <div class="input">
+          <label>{{'Password *'}}</label>
+          <input type="password" placeholder="Enter Password" v-model="password" />
+        </div>
+        <div class="input">
+          <label>{{'Number *'}}</label>
+          <input type="text" placeholder="Enter number" v-model="number" />
+        </div>
+        <div class="input">
+          <label>{{'Job Title *'}}</label>
+          <input type="text" placeholder="Enter Job Title" v-model="jobtitle" />
+        </div>
+        <div class="input">
+          <CountryDropdown
+            :default="true"
+            :defaultvalue="this.data.address"
+            v-on:get-data="getData($event)"
+          ></CountryDropdown>
+        </div>
+      </div>
+      <div>
+        <button type="submit" @click="SignUp()">Update</button>
+      </div>
     </div>
   </form>
 </template>
@@ -50,11 +91,24 @@ export default {
       jobtitle: "",
       address: "",
       errorMsg: "",
+      editname: "",
       error: false
     };
   },
   components: {
     CountryDropdown
+  },
+  props: ["edit", "data", "signup"],
+  mounted() {
+    if (this.edit) {
+      this.name = this.data.name;
+      this.email = this.data.email;
+      this.company = this.data.company;
+      this.password = this.data.password;
+      this.number = this.data.number;
+      this.jobtitle = this.data.job_title;
+      this.address = this.data.address;
+    }
   },
   methods: {
     getData(data) {
@@ -83,17 +137,44 @@ export default {
           this.errorMsg = "Please Enter Valid Email";
           return null;
         } else {
-          this.$store.commit("addUser", {
-            name: this.name,
-            password: this.password,
-            email: this.email,
-            company: this.company,
-            job_title: this.jobtitle,
-            number: this.number,
-            address: this.address,
-            roll: "user"
-          });
-          this.$router.push('/')
+          if (this.edit) {
+            this.$store.commit("editUser", {
+              name: this.name,
+              password: this.password,
+              email: this.email,
+              company: this.company,
+              job_title: this.jobtitle,
+              number: this.number,
+              address: this.address,
+              role: this.data.role
+            });
+          } else {
+            this.$store.commit("addUser", {
+              name: this.name,
+              password: this.password,
+              email: this.email,
+              company: this.company,
+              job_title: this.jobtitle,
+              number: this.number,
+              address: this.address,
+              role: "user"
+            });
+            if (this.signup) {
+                var userData={
+                    name: this.name,
+              password: this.password,
+              email: this.email,
+              company: this.company,
+              job_title: this.jobtitle,
+              number: this.number,
+              address: this.address,
+              role: "user"
+                }
+                localStorage.setItem("role", "user");
+                localStorage.setItem("data", JSON.stringify(userData));
+                this.$router.push("/dashboard");
+            }
+          }
         }
       }
     }
@@ -101,7 +182,6 @@ export default {
 };
 </script>
 <style scoped lang="scss">
-
 .inputs {
   label {
     font-size: 16px;

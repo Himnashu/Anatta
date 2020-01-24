@@ -5,7 +5,7 @@
             <div class="close" @click="showEditPopup=!showEditPopup">&#10005;</div>
           </template>
           <template>
-              <Signup />
+              <Signup :edit=true :data='data' />
           </template>
           <template v-slot:footer>
               <button></button>
@@ -42,15 +42,15 @@
               </div>
               <div class="input">
                 <label>Address : Country</label>
-                <input type="text" placeholder="Enter Job Title" disabled :value="data.address.country" />
+                <input v-if="data.address" type="text" placeholder="Enter Job Title" disabled :value="data.address.country" />
               </div>
               <div class="input">
                 <label>{{'State'}}</label>
-              <input type="text" placeholder="Enter Job Title" disabled :value="data.address.state" />
+              <input v-if="data.address" type="text" placeholder="Enter Job Title" disabled :value="data.address.state" />
               </div>
               <div class="input">
                 <label>{{'City'}}</label>
-               <input type="text" placeholder="Enter Job Title" disabled :value="data.address.city" />
+               <input v-if="data.address" type="text" placeholder="Enter Job Title" disabled :value="data.address.city" />
               </div>
             </div>
           </form>
@@ -75,7 +75,6 @@ export default {
     mounted : function(){
         if(localStorage.getItem('data')){
             this.data= JSON.parse(localStorage.getItem('data'))
-            console.log(this.data);
         }
     }
   

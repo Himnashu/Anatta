@@ -33,7 +33,6 @@ export default {
   },
   methods: {
     toggleTab(tabIndex) {
-      console.log(tabIndex);
       this.tabData[tabIndex].active = true;
       if (tabIndex === 1) {
         this.$parent.$data.tabSelect = false;
@@ -58,6 +57,9 @@ export default {
   color: white;
   font-weight: bold;
   font-size: 24px;
+    position: fixed;
+    top: 0;
+    z-index: 2;
   .heading {
     font-size: 28px;
     letter-spacing: 2px;

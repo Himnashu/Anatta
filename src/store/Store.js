@@ -17,7 +17,7 @@ export const store = new Vuex.Store({
       "India": {
          "Delhi": ["new Delhi", "North Delhi"],
          "Kerala": ["Thiruvananthapuram", "Palakkad"],
-         "Goa": ["North Goa", "South Goa"],
+         "Rajasthan": ["Jaipur", "Alwar"],
       },
       "Australia": {
         "South Australia": ["Dunstan", "Mitchell"],
@@ -42,7 +42,7 @@ export const store = new Vuex.Store({
           "city": "Jaipur"
         },
 
-        "roll": "admin"
+        "role": "admin"
       },
       {
         "name": "Himanshu Satija",
@@ -56,7 +56,7 @@ export const store = new Vuex.Store({
           "state": "Rajasthan",
           "city": "Jaipur"
         },
-        "roll": "user"
+        "role": "user"
       },
       {
         "name": "Himanshu Satija",
@@ -70,7 +70,7 @@ export const store = new Vuex.Store({
           "state": "Rajasthan",
           "city": "Jaipur"
         },
-        "roll": "user"
+        "role": "user"
       },
       {
         "name": "Himanshu Satija",
@@ -84,7 +84,7 @@ export const store = new Vuex.Store({
           "state": "Rajasthan",
           "city": "Jaipur"
         },
-        "roll": "user"
+        "role": "user"
       },
       {
         "name": "Himanshu Satija",
@@ -98,7 +98,7 @@ export const store = new Vuex.Store({
           "state": "Rajasthan",
           "city": "Jaipur"
         },
-        "roll": "user"
+        "role": "user"
       },
       {
         "name": "Himanshu Satija",
@@ -112,7 +112,7 @@ export const store = new Vuex.Store({
           "state": "Rajasthan",
           "city": "Jaipur"
         },
-        "roll": "user"
+        "role": "user"
       },
          {
         "name": "Himanshu Satija",
@@ -126,7 +126,7 @@ export const store = new Vuex.Store({
           "state": "Rajasthan",
           "city": "Jaipur"
         },
-        "roll": "user"
+        "role": "user"
       },
        {
         "name": "Himanshu Satija",
@@ -140,7 +140,7 @@ export const store = new Vuex.Store({
           "state": "Rajasthan",
           "city": "Jaipur"
         },
-        "roll": "user"
+        "role": "user"
       },
      {
         "name": "Himanshu Satija",
@@ -154,7 +154,7 @@ export const store = new Vuex.Store({
           "state": "Rajasthan",
           "city": "Jaipur"
         },
-        "roll": "user"
+        "role": "user"
       },
    {
         "name": "Himanshu Satija",
@@ -168,7 +168,7 @@ export const store = new Vuex.Store({
           "state": "Rajasthan",
           "city": "Jaipur"
         },
-        "roll": "user"
+        "role": "user"
       },
  {
         "name": "Himanshu Satija",
@@ -182,7 +182,7 @@ export const store = new Vuex.Store({
           "state": "Rajasthan",
           "city": "Jaipur"
         },
-        "roll": "user"
+        "role": "user"
       },
 {
         "name": "Himanshu Satija",
@@ -196,17 +196,39 @@ export const store = new Vuex.Store({
           "state": "Rajasthan",
           "city": "Jaipur"
         },
-        "roll": "user"
+        "role": "user"
       }
     ]
+  },
+  getters: {
+    roleBasedUserList (state, role) {
+      return state.users.filter(user => {
+        if (user.role === "user") {
+          return user
+        }
+      })
+    }
   },
   mutations: {
     addUser (users, newuser) {
      // mutate state
      this.state.users.push(newuser)
    },
+   editUser (users, editUser) {
+   this.state.users=this.state.users.map((user)=>{
+      if(user.email===editUser.email){
+        if(user.role==="admin"){
+          user=editUser;
+          localStorage.removeItem('data');
+          localStorage.setItem("data", JSON.stringify(user));
+        }
+        user=editUser;
+      }
+      return user
+    })
+  },
    DeleteUser (users, email) {
-    this.state.users=this.state.users.filter((user)=>{
+    this.state.users = this.state.users.filter((user)=>{
       if(user.email !== email){
         return user
       }

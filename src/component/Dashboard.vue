@@ -3,8 +3,9 @@
     <Side />
     <div class="main-dashboard">
       <div class="navbar" @click="logout()">
-        <p>Logout</p>
-      </div>
+        <p>Logout
+        </p>
+        </div>
       <UserDetails v-if="tabSelect" />
       <Users v-if="!tabSelect" />
     </div>
@@ -22,17 +23,17 @@ export default {
       tabSelect: true
     };
   },
-  mounted: function() {
-    if (localStorage.getItem("role") === null) {
-      this.$router.push("/");
+  mounted : function(){
+    if(localStorage.getItem('role')===null){
+        this.$router.push('/');
     }
   },
-  methods: {
+  methods : {
     logout() {
       localStorage.clear();
-      this.$router.push("/");
+      this.$router.push('/');
     }
-  },
+  }, 
   components: {
     Side,
     UserDetails,
@@ -47,6 +48,7 @@ export default {
   .main-dashboard {
     position: relative;
     width: 100%;
+    padding-left: 340px;
     .navbar {
       height: 50px;
       background: #002c9d;
@@ -57,7 +59,7 @@ export default {
       justify-content: flex-end;
       padding-right: 30px;
       padding-top: 10px;
-      p {
+            p{
         cursor: pointer;
       }
     }

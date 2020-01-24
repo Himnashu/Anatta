@@ -18,7 +18,7 @@
             <div class="close" @click="showEditPopup=!showEditPopup">&#10005;</div>
           </template>
           <template>
-              <Signup />
+              <Signup :edit=true :data='editData' />
           </template>
           <template v-slot:footer>
               <button></button>
@@ -53,13 +53,13 @@
         <th></th>
       </thead>
       <tbody>
-        <tr v-for="user in userData" :key="user.email">
+        <tr v-for="user in roleBasedUserList" :key="user.email">
           <td>{{user.name}}</td>
           <td>{{user.email}}</td>
           <td>{{user.number}}</td>
           <td class="buttons">
             <div>
-              <button @click="showEditPopup=!showEditPopup">Edit Details</button>
+              <button @click="EditUserPopup(user)">Edit Details</button>
               <button @click="DeletePopup(user.email)" >Delete</button>
             </div>
           </td>
@@ -71,6 +71,8 @@
 <script>
 import Popup from './Popup';
 import Signup from './SignUp';
+import { mapGetters, mapMutations, mapState } from 'vuex'
+
 export default {
   name: "users", 
   data (){
@@ -79,20 +81,21 @@ export default {
           showEditPopup : false,
           showDeletePopup : false, 
           DeleteUserEmail : '' ,
-          userData : this.$store.state.users.filter((user)=>{
-           if(user.roll!=="admin"){
-             return user
-           }
-          })
+          editData : ""
       }
+  },
+  computed: {
+    ...mapGetters(['roleBasedUserList'])
+  },
+  mounted(){
   },
   watch : {
     showPopup : () => {
      var element = document.getElementById("app");
-  // element.classList.add("popup-blur");
       }
   } ,
   methods : {
+    ...mapMutations(['DeleteUser']),
      DeletePopup(email) {
       this.showDeletePopup=!this.showDeletePopup;
       this.DeleteUserEmail=email;      
@@ -100,7 +103,10 @@ export default {
     DeleteUser(){
       this.$store.commit("DeleteUser",  this.DeleteUserEmail);
       this.showDeletePopup=!this.showDeletePopup;
-      console.log(this.$store.state.users)
+    },
+    EditUserPopup(userData){
+      this.showEditPopup=!this.showEditPopup;
+      this.editData=userData;
     }
   },
   components : {

@@ -31,7 +31,7 @@
         </div>
       </form>
       <div v-if="!tabData[0].active">
-        <Signup />
+        <Signup :signup="true"/>
       </div>
     </div>
   </div>
@@ -96,9 +96,8 @@ export default {
                 userData = user;
               }
             });
-            console.log(userData);
             if (userData.password === this.loginPassword) {
-              if (userData.roll === "admin") {
+              if (userData.role === "admin") {
                 this.errorMsg = "";
                 localStorage.setItem("role", "admin");
                 localStorage.setItem("data", JSON.stringify(userData));

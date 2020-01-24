@@ -22,7 +22,7 @@ export default {
 
 <style lang="scss" >
 .error{
-   color: red; 
+   color: red 
 }
 .popup-blur{
   filter: blur(2px);
