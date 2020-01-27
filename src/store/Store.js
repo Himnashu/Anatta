@@ -9,6 +9,7 @@ export const store = new Vuex.Store({
       { name: "Login", active: true },
       { name: "Sign up", active: false }
     ],
+    CurrentUser : {},
     dashBoardTab: [
       { name: 'Dashboard', active: true },
       { name: 'Users', active: false }
@@ -207,6 +208,14 @@ export const store = new Vuex.Store({
           return user
         }
       })
+    },
+    CurrentUser (state, role) {
+      state.CurrentUser=state.users.filter(user => {
+        if (user.role === "admin") {
+          return user
+        }
+      })
+      return state.CurrentUser;
     }
   },
   mutations: {
@@ -215,17 +224,16 @@ export const store = new Vuex.Store({
      this.state.users.push(newuser)
    },
    editUser (users, editUser) {
-   this.state.users=this.state.users.map((user)=>{
-      if(user.email===editUser.email){
-        if(user.role==="admin"){
-          user=editUser;
-          localStorage.removeItem('data');
-          localStorage.setItem("data", JSON.stringify(user));
+      this.state.users=this.state.users.map((user)=>{
+        if(user.email===editUser.email){
+          if(editUser.role==="admin"){
+            return editUser;
+          }else{
+           return editUser;
+          }
         }
-        user=editUser;
-      }
-      return user
-    })
+        return user
+      })
   },
    DeleteUser (users, email) {
     this.state.users = this.state.users.filter((user)=>{

@@ -43,10 +43,6 @@
           <input type="text" placeholder="Enter Name" v-model="name" />
         </div>
         <div class="input">
-          <label>{{'Email *'}}</label>
-          <input type="email" placeholder="Enter Email" v-model="email" />
-        </div>
-        <div class="input">
           <label>{{'Company *'}}</label>
           <input type="text" placeholder="Enter Company Name" v-model="company" />
         </div>
@@ -98,7 +94,7 @@ export default {
   components: {
     CountryDropdown
   },
-  props: ["edit", "data", "signup"],
+  props: ["edit", "data", "signup" , "showEditPopup"],
   mounted() {
     if (this.edit) {
       this.name = this.data.name;
@@ -148,11 +144,13 @@ export default {
               address: this.address,
               role: this.data.role
             });
+            // this.showEditPopup=!this.showEditPopup;
+            this.$emit('update:showEditPopup', !this.showEditPopup)
           } else {
             this.$store.commit("addUser", {
               name: this.name,
               password: this.password,
-              email: this.email,
+              email: this.data.email,
               company: this.company,
               job_title: this.jobtitle,
               number: this.number,

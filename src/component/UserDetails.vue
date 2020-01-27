@@ -5,14 +5,14 @@
             <div class="close" @click="showEditPopup=!showEditPopup">&#10005;</div>
           </template>
           <template>
-              <Signup :edit=true :data='data' />
+              <Signup :showEditPopup.sync="showEditPopup" :edit=true :data='data' />
           </template>
           <template v-slot:footer>
               <button></button>
           </template>
       </popup>
         <div class="edit-details">
-              <button @click="showEditPopup=!showEditPopup">Edit Details</button>
+              <button @click="editPopup()">Edit Details</button>
         </div>
        <form>
             <div class="inputs">
@@ -59,7 +59,7 @@
 <script>
 import popup from './Popup';
 import Signup from './SignUp';
-
+import { mapGetters, mapMutations, mapState } from 'vuex'
 export default {
     name : 'userDetails' , 
     data (){
@@ -68,14 +68,25 @@ export default {
             data : {}
         }
     },
+    computed: {
+    ...mapGetters(['CurrentUser'])
+  },
     components : {
         popup,
         Signup
     },
     mounted : function(){
-        if(localStorage.getItem('data')){
-            this.data= JSON.parse(localStorage.getItem('data'))
-        }
+              this.data=this.CurrentUser[0];
+    },
+     updated :  function(){
+              this.data=this.CurrentUser[0];
+
+     },
+    methods : {
+      editPopup(){
+        this.showEditPopup=!this.showEditPopup
+        this.data=this.CurrentUser[0];
+      }
     }
   
 }
